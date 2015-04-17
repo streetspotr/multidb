@@ -50,8 +50,10 @@ module Multidb
           @fallback = @configuration.raw_configuration[:fallback]
         elsif defined?(Rails)
           @fallback = %w(development test).include?(Rails.env)
+        elsif ENV.has_key?("RACK_ENV")
+          @fallback = %w(development test).include?(ENV["RACK_ENV"])
         else
-          @fallback = false
+          @fallback = true
         end
         @default_candidate = Candidate.new(@configuration.default_pool)
         unless @candidates.include?(:default)
